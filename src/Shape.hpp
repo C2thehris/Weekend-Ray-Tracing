@@ -1,18 +1,33 @@
-#include "color.hpp"
+#pragma once
+#include <memory>
+
 #include "ray.hpp"
 #include "vec3.hpp"
+#include "rtweekend.hpp"
+#include "Material.hpp"
+
+using std::unique_ptr;
 
 template <class T>
-class Shape {
- public:
-  Shape(const Point3<T>& center, const Color<T>& color)
-      : center_(center), color_(color) {}
+class Shape
+{
+public:
+  Shape(const Point3<T> &center, unique_ptr<Material<T>> &&material) : center_(center)
+  {
+    this->material_ = move(material);
+  }
 
-  constexpr virtual bool collision(const Ray<T>& r) const noexcept = 0;
-  constexpr const Point3<T> center() const noexcept { return this->center_; }
-  constexpr const Color<T> color() const noexcept { return this->color_; }
+  constexpr virtual T collision(const Ray<T> &r, Vec3<T> &N) const noexcept = 0;
+  constexpr const Point3<T> center() const noexcept
+  {
+    return this->center_;
+  }
+  constexpr const Material<T> *material() const noexcept
+  {
+    return this->material_.get();
+  }
 
- private:
+protected:
   Point3<T> center_;
-  Color<T> color_;
+  unique_ptr<Material<T>> material_;
 };

@@ -3,11 +3,12 @@
 #include <cmath>
 
 template <class T>
-class Vec3 {
- private:
+class Vec3
+{
+private:
   std::array<T, 3> e;
 
- public:
+public:
   constexpr Vec3() : e{0, 0, 0} {}
   constexpr Vec3(T e0, T e1, T e2) : e{e0, e1, e2} {}
 
@@ -19,25 +20,28 @@ class Vec3 {
   constexpr T y() const noexcept { return e[1]; }
   constexpr T z() const noexcept { return e[2]; }
 
-  constexpr Vec3<T> operator-() const noexcept {
+  constexpr Vec3<T> operator-() const noexcept
+  {
     return Vec3<T>(-this->e[0], -this->e[1], -this->e[2]);
   }
 
-  constexpr Vec3<T> operator-(const Vec3<T> &rhs) const noexcept {
+  constexpr Vec3<T> operator-(const Vec3<T> &rhs) const noexcept
+  {
     T x = this->e[0] - rhs.e[0];
     T y = this->e[1] - rhs.e[1];
     T z = this->e[2] - rhs.e[2];
     return Vec3<T>(x, y, z);
   }
 
-  constexpr Vec3<T> operator+(const Vec3<T> &rhs) const noexcept {
+  constexpr Vec3<T> operator+(const Vec3<T> &rhs) const noexcept
+  {
     T x = this->e[0] + rhs.e[0];
     T y = this->e[1] + rhs.e[1];
     T z = this->e[2] + rhs.e[2];
     return Vec3<T>(x, y, z);
   }
 
-  constexpr T operator*(const Vec3<T> &rhs) const noexcept  // Dot Product
+  constexpr T operator*(const Vec3<T> &rhs) const noexcept // Dot Product
   {
     T total = 0;
     total += this->e[0] * rhs.e[0];
@@ -46,7 +50,7 @@ class Vec3 {
     return total;
   }
 
-  constexpr Vec3<T> operator*(const T scalar) const noexcept  // Scalar Product
+  constexpr Vec3<T> operator*(const T scalar) const noexcept // Scalar Product
   {
     T x = this->x() * scalar;
     T y = this->y() * scalar;
@@ -54,43 +58,48 @@ class Vec3 {
     return Vec3<T>(x, y, z);
   }
 
-  constexpr Vec3<T> operator/(const T scalar) const  // Scalar Division
+  constexpr Vec3<T> operator/(const T scalar) const // Scalar Division
   {
     return *this * (1 / scalar);
   }
 
-  constexpr Vec3<T> &operator-=(const Vec3<T> &rhs) noexcept {
+  constexpr Vec3<T> &operator-=(const Vec3<T> &rhs) noexcept
+  {
     this->e[0] -= rhs.e[0];
     this->e[1] -= rhs.e[1];
     this->e[2] -= rhs.e[2];
     return *this;
   }
 
-  constexpr Vec3<T> &operator+=(const Vec3<T> &rhs) noexcept {
+  constexpr Vec3<T> &operator+=(const Vec3<T> &rhs) noexcept
+  {
     this->e[0] += rhs.e[0];
     this->e[1] += rhs.e[1];
     this->e[2] += rhs.e[2];
     return *this;
   }
 
-  constexpr Vec3<T> &operator*=(const T scalar) noexcept  // Scalar Product
+  constexpr Vec3<T> &operator*=(const T scalar) noexcept // Scalar Product
   {
-    for (auto &coord : this->e) {
+    for (auto &coord : this->e)
+    {
       coord *= scalar;
     }
     return this;
   }
 
-  constexpr Vec3<T> &operator/=(const T scalar)  // Scalar Division
+  constexpr Vec3<T> &operator/=(const T scalar) // Scalar Division
   {
     return this *= (1 / scalar);
   }
 
-  constexpr T length_squared() const noexcept {
+  constexpr T length_squared() const noexcept
+  {
     return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
   }
 
-  constexpr T length() const noexcept {
+  constexpr T length() const noexcept
+  {
     return std::sqrt(this->length_squared());
   }
 
@@ -99,13 +108,15 @@ class Vec3 {
 
 template <class T>
 inline std::ostream &operator<<(std::ostream &ostr,
-                                const Vec3<T> &vec) noexcept {
+                                const Vec3<T> &vec) noexcept
+{
   ostr << vec.x() << ' ' << vec.y() << ' ' << vec.z();
   return ostr;
 }
 
 template <class T>
-Vec3<T> crossProuduct(const Vec3<T> &lhs, const Vec3<T> &rhs) noexcept {
+Vec3<T> crossProuduct(const Vec3<T> &lhs, const Vec3<T> &rhs) noexcept
+{
   T x = lhs.y() * rhs.z() - lhs.z() * rhs.y();
   T y = lhs.z() * rhs.x() - lhs.x() * rhs.z();
   T z = lhs.x() * rhs.y() - lhs.y() * rhs.x();
@@ -113,8 +124,18 @@ Vec3<T> crossProuduct(const Vec3<T> &lhs, const Vec3<T> &rhs) noexcept {
 }
 
 template <class T>
-constexpr Vec3<T> operator*(const T scalar, const Vec3<T> &vec) {
+constexpr Vec3<T> operator*(const T scalar, const Vec3<T> &vec)
+{
   return vec * scalar;
+}
+
+template <class T>
+constexpr Vec3<T> elementMult(const Vec3<T> &lhs, const Vec3<T> &rhs)
+{
+  T x = lhs.x() * rhs.x();
+  T y = lhs.y() * rhs.y();
+  T z = lhs.z() * rhs.z();
+  return Vec3<T>(x, y, z);
 }
 
 template <class T>
