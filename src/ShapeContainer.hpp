@@ -13,7 +13,7 @@ using std::unique_ptr;
 
 struct Collision_t
 {
-  double t;
+  double t = INF;
   Shape<double> *contacted;
   Vec3<double> normal;
   Point3<double> contact;
@@ -34,17 +34,17 @@ public:
   {
     bool hit = false;
 
-    double best_t = INF;
     Collision_t soonest;
     for (const auto &ptr : shapes)
     {
       Vec3<double> normal;
       double t = ptr->collision(ray, normal);
-      if (t >= 0 && t < best_t)
+      if (t >= 0.001 && t < soonest.t)
       {
         hit = true;
-        best_t = t;
+        soonest.t = t;
         soonest.normal = normal;
+        soonest.contact = ray.at(t);
         soonest.contacted = ptr.get();
       }
     }

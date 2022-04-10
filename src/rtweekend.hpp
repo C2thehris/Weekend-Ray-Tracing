@@ -13,11 +13,9 @@
 
 inline double random_double()
 {
-  // static std::uniform_real_distribution<double> dist(0, 1.0);
-  // static std::mt19937 generator;
-  // return dist(generator);
-  double result = static_cast<double>(rand()) / RAND_MAX;
-  return result;
+  static std::uniform_real_distribution<double> dist(0, 1.0);
+  static std::mt19937_64 generator;
+  return dist(generator);
 }
 
 inline Vec3<double> random_unit_vector()

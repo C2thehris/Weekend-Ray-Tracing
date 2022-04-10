@@ -104,6 +104,12 @@ public:
   }
 
   constexpr Vec3<T> unit() const { return *this / this->length(); }
+
+  constexpr bool nearZero() const
+  {
+    const double eps = .0000001;
+    return e[0] < eps && e[1] < eps && e[2] < eps;
+  }
 };
 
 template <class T>

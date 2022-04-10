@@ -11,7 +11,7 @@ class Material
 public:
   Material(const Color<T> &color) : albedo_(color) {}
 
-  virtual Ray<T> scatter(const Ray<T> &ray, const Point3<double> &contact, const Vec3<T> &normal, Color<T> &attenuation) const = 0;
+  virtual bool scatter(const Ray<T> &ray, const Point3<double> &contact, const Vec3<T> &normal, Ray<T> &next, Color<T> &attenuation) const = 0;
   constexpr const Color<double> attenuation() const noexcept
   {
     return this->albedo_;

@@ -14,15 +14,18 @@ public:
     auto RminusC = r.origin() - this->center_;
     double a = r.direction().length_squared();
     double halfb = r.direction() * RminusC;
-    double c = (RminusC * RminusC) - (radius_ * radius_);
+    double c = (RminusC.length_squared()) - (radius_ * radius_);
 
     double discriminant = halfb * halfb - a * c;
     if (discriminant < 0)
     {
       return -1;
     }
-    double soonest = (-halfb - sqrt(discriminant)) / (a);
-    if (soonest < 0.001)
+    double sqrtd = sqrt(discriminant);
+    double soonest = (-halfb - sqrtd) / (a);
+    if (soonest < 0)
+      soonest = (-halfb + sqrtd) / a;
+    if (soonest < 0)
       return -1;
     N = (r.at(soonest) - this->center_) / radius_;
     if (r.direction() * N > 0)

@@ -13,7 +13,7 @@ public:
   constexpr T collision(const Ray<T> &ray, Vec3<T> &N) const noexcept override
   {
     double t = (d_ - (normal_ * ray.origin())) / (normal_ * ray.direction());
-    N = normal_;
+    N = -normal_;
     return t > 0.001 && t <= 10 ? t : -1;
   }
 
