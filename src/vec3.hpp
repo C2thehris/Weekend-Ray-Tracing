@@ -121,7 +121,7 @@ inline std::ostream &operator<<(std::ostream &ostr,
 }
 
 template <class T>
-Vec3<T> crossProuduct(const Vec3<T> &lhs, const Vec3<T> &rhs) noexcept
+constexpr Vec3<T> crossProuduct(const Vec3<T> &lhs, const Vec3<T> &rhs) noexcept
 {
   T x = lhs.y() * rhs.z() - lhs.z() * rhs.y();
   T y = lhs.z() * rhs.x() - lhs.x() * rhs.z();

@@ -14,7 +14,7 @@ public:
   {
     double t = (d_ - (normal_ * ray.origin())) / (normal_ * ray.direction());
     N = -normal_;
-    return t > 0.001 && t <= 10 ? t : -1;
+    return t > 0.001 && t <= 100 ? t : -1;
   }
 
 private:

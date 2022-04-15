@@ -9,23 +9,25 @@ class Camera
   Vec3<double> vertical;
 
 public:
-  constexpr Camera(int width, int height) noexcept
+  constexpr Camera(const Point3<double> &lookFrom, const Point3<double> &lookTo, const Vec3<double> &vup, double vfov, double aspect_ratio) noexcept
   {
-    double aspect_ratio = static_cast<double>(width) / height;
-    double viewport_height = 2.0;
+    double theta = degrees_to_radians(vfov);
+    double h = std::tan(theta / 2);
+    double viewport_height = 2.0 * h;
     double viewport_width = viewport_height * aspect_ratio;
-    double focal_length = 1.0;
 
-    origin = Point3<double>(0, 0, 0);
-    horizontal = Point3<double>(viewport_width, 0, 0);
-    vertical = Point3<double>(0, viewport_height, 0);
-    lower_left = origin - horizontal / 2 - vertical / 2 -
-                 Vec3<double>(0, 0, focal_length);
+    auto w = (lookFrom - lookTo).unit();
+    auto u = crossProuduct(vup, w);
+    auto v = crossProuduct(w, u);
+
+    origin = lookFrom;
+    horizontal = viewport_width * u;
+    vertical = viewport_height * v;
+    lower_left = origin - horizontal / 2 - vertical / 2 - w;
   }
 
-  constexpr Ray<double> getRay(double u, double v) const noexcept
+  constexpr Ray<double> getRay(double s, double t) const noexcept
   {
-    return Ray<double>(origin,
-                       lower_left + u * horizontal + v * vertical - origin);
+    return Ray<double>(origin, lower_left + s * horizontal + t * vertical - origin);
   }
 };

@@ -9,6 +9,7 @@
 #define MAX_COLOR 256
 #define SAMPLES 100
 #define DEPTH_LIMIT 50
+#define PI 3.14159265358979323
 #define INF std::numeric_limits<double>::infinity()
 
 inline double random_double()
@@ -32,7 +33,12 @@ inline Vec3<double> random_unit_vector()
   return random_vector.unit();
 }
 
-inline double clamp(double val, double low, double high)
+constexpr double clamp(double val, double low, double high)
 {
   return std::max(std::min(val, high), low);
+}
+
+constexpr double degrees_to_radians(double degrees)
+{
+  return (degrees / 180.0) * PI;
 }

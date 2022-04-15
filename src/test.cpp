@@ -14,6 +14,7 @@
 #include "Material.hpp"
 #include "Lambertian.hpp"
 #include "Metal.hpp"
+#include "Dielectic.hpp"
 
 using std::make_shared;
 using std::make_unique;
@@ -33,6 +34,11 @@ Color<double> ray_color(const Ray<double> &ray, const ShapeContainer &shapes, in
   {
     Color<double> color;
     Ray<double> next;
+    // if (depth == 1 && collision.value().contacted->material()->attenuation().z() == .9)
+    // {
+    //   std::cerr << "HI" << std::endl;
+    // }
+
     if (collision.value().contacted->material()->scatter(ray, collision->contact, collision->normal, next, color))
     {
       return elementMult(color, ray_color(next, shapes, depth + 1));
@@ -79,19 +85,26 @@ int main(int argc, char **argv)
   }
   const int image_width = atoi(argv[1]);
   const int image_height = atoi(argv[2]);
-  Camera view(image_width, image_height);
+  const double aspect_ratio = static_cast<double>(image_width) / static_cast<double>(image_height);
+
+  Point3<double> origin(-2, 2, 1);
+  Point3<double> target(0, 0, -1);
+  Vec3<double> vup(0, 1, 0);
+  Camera view(origin, target, vup, 135.0, aspect_ratio);
 
   unique_ptr<Material<double>> material_ground = make_unique<Lambertian>(Color<double>(0.8, 0.8, 0.0));
-  unique_ptr<Material<double>> material_center = make_unique<Lambertian>(Color<double>(0.7, 0.3, 0.3));
-  unique_ptr<Material<double>> material_left = make_unique<Metal>(Color<double>(0.8, 0.8, 0.8));
-  unique_ptr<Material<double>> material_right = make_unique<Metal>(Color<double>(0.8, 0.6, 0.2));
+  unique_ptr<Material<double>> material_center = make_unique<Lambertian>(Color<double>(0.1, 0.2, 0.5));
+  unique_ptr<Material<double>> material_left = make_unique<Dielectic>(1.5);
+  unique_ptr<Material<double>> material_left2 = make_unique<Dielectic>(1.5);
+  unique_ptr<Material<double>> material_right = make_unique<Metal>(Color<double>(0.8, 0.6, 0.2), 0.0);
 
   ShapeContainer shapes;
   shapes.push_back(move(make_unique<Face<double>>(Point3<double>(0.0, -1.0, 0), move(material_ground), Vec3<double>(0.0, -1.0, 0.0))));
   // shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(0.0, -100.5, 0), move(material_ground), 100)));
-  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(0.0, 0.0, -1.0), move(material_center), .5)));
-  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(-1.0, 0.0, -1.0), move(material_left), .5)));
-  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(1.0, 0.0, -1.0), move(material_right), .5)));
+  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(0.0, 0.0, -1.0), move(material_center), 1.0)));
+  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(-1.5, 0.0, -1.0), move(material_left), .5)));
+  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(-1.5, 0.0, -1.0), move(material_left2), -.4)));
+  shapes.push_back(move(make_unique<Sphere<double>>(Point3<double>(2.0, 0.0, -1.0), move(material_right), 1.0)));
 
   render(image_width, image_height, view, shapes);
 

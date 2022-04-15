@@ -14,24 +14,21 @@ public:
     auto RminusC = r.origin() - this->center_;
     double a = r.direction().length_squared();
     double halfb = r.direction() * RminusC;
-    double c = (RminusC.length_squared()) - (radius_ * radius_);
+    double c = RminusC.length_squared() - radius_ * radius_;
 
-    double discriminant = halfb * halfb - a * c;
+    auto discriminant = halfb * halfb - a * c;
     if (discriminant < 0)
-    {
       return -1;
-    }
+
     double sqrtd = sqrt(discriminant);
-    double soonest = (-halfb - sqrtd) / (a);
-    if (soonest < 0)
+    double soonest = (-halfb - sqrtd) / a;
+    if (soonest < 0.001)
       soonest = (-halfb + sqrtd) / a;
-    if (soonest < 0)
+    if (soonest < 0.001)
       return -1;
     N = (r.at(soonest) - this->center_) / radius_;
-    if (r.direction() * N > 0)
-      N = -N;
 
-    return soonest; // Just forward for now
+    return soonest;
   }
 
 private:

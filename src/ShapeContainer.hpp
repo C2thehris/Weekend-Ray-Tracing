@@ -17,6 +17,7 @@ struct Collision_t
   Shape<double> *contacted;
   Vec3<double> normal;
   Point3<double> contact;
+  bool flipped = false;
 };
 
 class ShapeContainer
