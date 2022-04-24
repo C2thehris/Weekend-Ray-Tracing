@@ -5,17 +5,21 @@
 class Sphere
 {
 private:
-  double r_;
   color3 color_;
+  MaterialProperty mat_;
+
+  double r_;
   point3 center_;
 
 public:
-  Sphere(point3 center, color3 color, double r) : center_(center), color_(color), r_(r) {}
+  Sphere(point3 center, MaterialProperty mat, color3 color, double r) : center_(center), color_(color), mat_(mat), r_(r) {}
 
   __device__ color3 color()
   {
     return this->color_;
   }
+
+  __device__ MaterialProperty material() { return this->mat_; }
 
   __device__ double hit(Ray in, vec3 &Nout) const
   {

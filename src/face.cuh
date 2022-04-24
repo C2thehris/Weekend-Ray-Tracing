@@ -5,16 +5,19 @@
 
 class Face
 {
-  point3 center_;
   color3 color_;
+  MaterialProperty mat_;
+
+  point3 center_;
   vec3 normal_;
   double d_;
 
 public:
-  Face(point3 center, color3 color, vec3 normal) noexcept : center_(center), color_(color), normal_(normal)
+  Face(point3 center, MaterialProperty mat, color3 color, vec3 normal) noexcept : center_(center), color_(color), mat_(mat), normal_(normal)
   {
     d_ = normal * center;
   }
+  __device__ MaterialProperty material() { return this->mat_; }
 
   __device__ color3 color() const noexcept
   {

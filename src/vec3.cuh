@@ -90,7 +90,7 @@ __host__ __device__ double length(const double3 &vec) noexcept
 #endif
 }
 
-__host__ __device__ double3 unit(const double3 &vec)
+__host__ __device__ double3 unit(double3 vec)
 {
   return vec / length(vec);
 }

@@ -9,8 +9,8 @@ public:
   __device__ Ray(const double3 &origin, const double3 &direction) noexcept
       : origin_(origin), direction_(direction) {}
 
-  constexpr const __device__ point3 origin() const noexcept { return this->origin_; }
-  constexpr const __device__ vec3 direction() const noexcept
+  __device__ point3 origin() const noexcept { return this->origin_; }
+  __device__ vec3 direction() const noexcept
   {
     return this->direction_;
   }

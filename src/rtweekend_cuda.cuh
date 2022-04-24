@@ -7,11 +7,24 @@
 #include <curand_kernel.h>
 #include "vec3.cuh"
 
-#define MAX_COLOR 255.99999
+#define MAX_COLOR 256
 #define SAMPLES 100
 #define DEPTH_LIMIT 50
 #define PI 3.14159265358979323
 #define INF std::numeric_limits<double>::infinity()
+
+enum Material
+{
+  METAL,
+  LAMBERTIAN,
+  DIELECTIC
+};
+
+struct MaterialProperty
+{
+  Material type;
+  double property;
+};
 
 typedef double3 point3;
 typedef double3 vec3;
@@ -25,11 +38,9 @@ inline void hostCheckError(cudaError_t error)
   }
 }
 
-// TODO: Use curand to produce a random double
 __device__ double random_double(curandState_t *state)
 {
   return curand_uniform_double(state);
-  // return 0.0;
 }
 
 __device__ vec3 random_unit_vector(curandState_t *state)
@@ -55,6 +66,11 @@ constexpr double degrees_to_radians(double degrees)
   return (degrees / 180.0) * PI;
 }
 
+__device__ vec3 reflect(vec3 v, vec3 n)
+{
+  return v - 2 * (v * n) * n;
+}
+
 std::ostream &operator<<(std::ostream &ostr,
                          const dim3 &vec) noexcept
 {
@@ -65,6 +81,9 @@ std::ostream &operator<<(std::ostream &ostr,
 std::ostream &operator<<(std::ostream &ostr,
                          const color3 &vec) noexcept
 {
-  ostr << static_cast<int>(vec.x * MAX_COLOR) << ' ' << static_cast<int>(vec.y * MAX_COLOR) << ' ' << static_cast<int>(vec.z * MAX_COLOR);
-  return ostr;
+  double r = sqrt(vec.x / SAMPLES);
+  double g = sqrt(vec.y / SAMPLES);
+  double b = sqrt(vec.z / SAMPLES);
+  dim3 pixel(clamp(r * MAX_COLOR, 0, 255), clamp(g * MAX_COLOR, 0, 255), clamp(b * MAX_COLOR, 0, 255));
+  return ostr << pixel;
 }
