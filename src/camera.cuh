@@ -12,8 +12,8 @@ class Camera
   vec3 vertical;
 
 public:
-  Camera(point3 lookFrom, point3 lookTo, vec3 vup,
-         double vfov, double aspect_ratio) noexcept
+  __device__ Camera(point3 lookFrom, point3 lookTo, vec3 vup,
+                    double vfov, double aspect_ratio) noexcept
   {
     double theta = degrees_to_radians(vfov);
     double h = std::tan(theta / 2);
