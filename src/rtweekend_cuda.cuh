@@ -1,4 +1,5 @@
 #pragma once
+
 #include <algorithm>
 #include <iostream>
 #include <numeric>
@@ -7,24 +8,12 @@
 #include <curand_kernel.h>
 #include "vec3.cuh"
 
+#define NUM_THREADS 8
 #define MAX_COLOR 256
 #define SAMPLES 100
 #define DEPTH_LIMIT 50
 #define PI 3.14159265358979323
 #define INF std::numeric_limits<double>::infinity()
-
-enum Material
-{
-  METAL,
-  LAMBERTIAN,
-  DIELECTIC
-};
-
-struct MaterialProperty
-{
-  Material type;
-  double property;
-};
 
 typedef double3 point3;
 typedef double3 vec3;
@@ -61,7 +50,7 @@ constexpr double clamp(double val, double low, double high)
   return std::max(std::min(val, high), low);
 }
 
-constexpr double degrees_to_radians(double degrees)
+constexpr __host__ __device__ double degrees_to_radians(double degrees)
 {
   return (degrees / 180.0) * PI;
 }
