@@ -43,9 +43,9 @@ namespace RTW
       return hit;
     }
 
-    ~ShapeContainer()
+    __device__ ~ShapeContainer()
     {
-      hostCheckError(cudaFree(_shapes));
+      delete *_shapes;
     }
   }; // class ShapeContainer
 

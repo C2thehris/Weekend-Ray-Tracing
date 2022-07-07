@@ -101,6 +101,12 @@ namespace RTW
     }
   }
 
+  __global__ void freeObjects(ShapeContainer **container, Camera **camera)
+  {
+    delete *container;
+    delete *camera;
+  }
+
   class Renderer
   {
   public:
@@ -134,12 +140,13 @@ namespace RTW
       renderPixel<<<blocks, threads>>>(devImage, imgDim, camera, container, rand());
       hostCheckError(cudaDeviceSynchronize());
 
-      // TODO: Free Stuff
+      freeObjects<<<1, 1>>>(container, camera);
 
       color3 *hostImage;
       hostCheckError(cudaMallocHost(&hostImage, sizeof(color3) * pixelCount));
 
       hostCheckError(cudaMemcpy(hostImage, devImage, sizeof(color3) * pixelCount, cudaMemcpyDeviceToHost));
+      hostCheckError(cudaFree(devImage));
       return hostImage;
     }
 

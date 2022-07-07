@@ -21,7 +21,7 @@ public:
     double viewport_width = viewport_height * aspect_ratio;
 
     auto w = unit(lookFrom - lookTo);
-    auto u = crossProuduct(vup, w);
+    auto u = unit(crossProuduct(vup, w));
     auto v = crossProuduct(w, u);
 
     origin = lookFrom;
